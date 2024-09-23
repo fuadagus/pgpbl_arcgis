@@ -4,7 +4,8 @@ import MapView from '@arcgis/core/views/MapView';
 import { Geolocation } from '@capacitor/geolocation';
 import Graphic from '@arcgis/core/Graphic';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
-import Point from '@arcgis/core/geometry/Point'; // Import the Point class
+import Point from '@arcgis/core/geometry/Point'; 
+import ImageryLayer from '@arcgis/core/layers/ImageryLayer';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,9 @@ export class HomePage implements OnInit {
 
   private latitude: number | any;
   private longitude: number | any;
-
+  private map: Map | any;
+  private view: MapView | any;
+  
   constructor() {}
 
   public async ngOnInit() {
@@ -23,42 +26,71 @@ export class HomePage implements OnInit {
     this.latitude = position.coords.latitude;
     this.longitude = position.coords.longitude;
 
-    const map = new Map({
+    this.map = new Map({
       basemap: 'topo-vector'
     });
-
-    const view = new MapView({
+    
+    this.view = new MapView({
       container: 'container',
-      map: map,
+      map: this.map,
       zoom: 8,
       center: [this.longitude, this.latitude]
     });
-
-
+    
     const graphicsLayer = new GraphicsLayer();
-    map.add(graphicsLayer);
+    this.map.add(graphicsLayer);
 
-   
-    const point = new Point({
+    const WeatherServiceUrl = 'https://mapservices.weather.noaa.gov/eventdriven/rest/services/radar/radar_base_reflectivity_time/ImageServer';
+    let weatherServiceFL = new ImageryLayer({url: WeatherServiceUrl});
+    this.map.add(weatherServiceFL);
+
+    // Marker from geolocation
+    const geoPoint = new Point({
       longitude: this.longitude,
       latitude: this.latitude
     });
 
-    const markerSymbol = {
+    const geoMarkerSymbol = {
       type: "simple-marker",
-      color: [226, 119, 40],  // orange
+      color: [226, 119, 40],
       outline: {
-        color: [255, 255, 255],  // white
-        width: 1
+        color: [255, 255, 255],
+        width: 2
       }
     };
 
-
-    const pointGraphic = new Graphic({
-      geometry: point,  
-      symbol: markerSymbol
+    const geoPointGraphic = new Graphic({
+      geometry: geoPoint,  
+      symbol: geoMarkerSymbol
     });
 
-    graphicsLayer.add(pointGraphic);
+    graphicsLayer.add(geoPointGraphic);
+
+    // Marker at 43.701882607460945, -79.41245941352786
+    const fixedPoint = new Point({
+      longitude: -79.41245941352786,
+      latitude: 43.701882607460945
+    });
+
+    const fixedMarkerSymbol = {
+      type: "simple-marker",
+      color: [255, 0, 255], 
+      outline: {
+        color: [255, 255, 255],
+        width: 2
+      }
+    };
+
+    const fixedPointGraphic = new Graphic({
+      geometry: fixedPoint,
+      symbol: fixedMarkerSymbol
+    });
+
+    graphicsLayer.add(fixedPointGraphic);
+  }
+
+  public onBasemapChange(event: any) {
+    const selectedBasemap = event.target.value;
+    this.map.basemap = selectedBasemap;
   }
 }
