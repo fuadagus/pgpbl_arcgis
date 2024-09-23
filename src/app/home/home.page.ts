@@ -14,6 +14,9 @@ import ImageryLayer from '@arcgis/core/layers/ImageryLayer';
 })
 export class HomePage implements OnInit {
 
+  private USlat: number | any;
+  private USlong: number | any;
+
   private latitude: number | any;
   private longitude: number | any;
   private map: Map | any;
@@ -29,6 +32,8 @@ export class HomePage implements OnInit {
     const position = await Geolocation.getCurrentPosition();
     this.latitude = position.coords.latitude;
     this.longitude = position.coords.longitude;
+
+
 
     this.initializeMap(this.selectedBasemap);
   }

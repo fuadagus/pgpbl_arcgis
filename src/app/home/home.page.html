@@ -4,18 +4,16 @@
       Fuad Agus Salim
     </ion-title>
   </ion-toolbar>
+  <ion-buttons slot="start">
+    <ion-button *ngFor="let basemap of basemaps" (click)="changeBasemap(basemap)" [color]="selectedBasemap === basemap ? 'primary' : 'medium'">
+      {{ basemap | titlecase }}
+    </ion-button>
+  </ion-buttons>
+  
 </ion-header>
 
 <ion-content>
-  <div id="container" style="height: 80vh; width: 100%;"></div>
+  <div id="container" style="height: 100vh; width: 100%;"></div>
   
-  <ion-footer>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-button *ngFor="let basemap of basemaps" (click)="changeBasemap(basemap)" [color]="selectedBasemap === basemap ? 'primary' : 'medium'">
-          {{ basemap | titlecase }}
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-footer>
+  
 </ion-content>
