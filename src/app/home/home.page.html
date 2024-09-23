@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>
       Fuad Agus Salim
@@ -6,15 +6,16 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<ion-content>
+  <div id="container" style="height: 80vh; width: 100%;"></div>
+  
+  <ion-footer>
     <ion-toolbar>
-      <ion-title size="large">Fuad Agus Salimk</ion-title>
+      <ion-buttons slot="start">
+        <ion-button *ngFor="let basemap of basemaps" (click)="changeBasemap(basemap)" [color]="selectedBasemap === basemap ? 'primary' : 'medium'">
+          {{ basemap | titlecase }}
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  </ion-footer>
 </ion-content>

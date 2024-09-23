@@ -19,6 +19,10 @@ export class HomePage implements OnInit {
   private map: Map | any;
   private view: MapView | any;
   
+  // Define available basemaps
+  public basemaps: string[] = ['topo-vector', 'streets', 'dark-gray'];
+  public selectedBasemap: string = 'topo-vector'; // Default basemap
+  
   constructor() {}
 
   public async ngOnInit() {
@@ -26,8 +30,12 @@ export class HomePage implements OnInit {
     this.latitude = position.coords.latitude;
     this.longitude = position.coords.longitude;
 
+    this.initializeMap(this.selectedBasemap);
+  }
+
+  private initializeMap(basemap: string) {
     this.map = new Map({
-      basemap: 'topo-vector'
+      basemap: basemap
     });
     
     this.view = new MapView({
@@ -66,7 +74,7 @@ export class HomePage implements OnInit {
 
     graphicsLayer.add(geoPointGraphic);
 
-    // Marker at 43.701882607460945, -79.41245941352786
+    // Marker at fixed coordinates
     const fixedPoint = new Point({
       longitude: -79.41245941352786,
       latitude: 43.701882607460945
@@ -89,8 +97,10 @@ export class HomePage implements OnInit {
     graphicsLayer.add(fixedPointGraphic);
   }
 
-  public onBasemapChange(event: any) {
-    const selectedBasemap = event.target.value;
-    this.map.basemap = selectedBasemap;
+  // Method to change basemap
+  public changeBasemap(basemap: string) {
+    this.view.map.basemap = basemap;
+    this.selectedBasemap = basemap;
   }
+
 }
