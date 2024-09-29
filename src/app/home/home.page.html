@@ -8,6 +8,8 @@
     <ion-button *ngFor="let basemap of basemaps" (click)="changeBasemap(basemap)" [color]="selectedBasemap === basemap ? 'primary' : 'medium'">
       {{ basemap | titlecase }}
     </ion-button>
+    <ion-button (click)="switchLocation()">Ganti lokasi</ion-button>
+
   </ion-buttons>
   
 </ion-header>

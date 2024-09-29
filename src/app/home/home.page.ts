@@ -26,14 +26,17 @@ export class HomePage implements OnInit {
   public basemaps: string[] = ['topo-vector', 'streets', 'dark-gray'];
   public selectedBasemap: string = 'topo-vector'; // Default basemap
   
+  // Coordinates for the second location
+  private secondLatitude: number = 40.54291242034441;
+  private secondLongitude: number = -81.27441690171175;
+  private isGeolocation: boolean = true;
+
   constructor() {}
 
   public async ngOnInit() {
     const position = await Geolocation.getCurrentPosition();
     this.latitude = position.coords.latitude;
     this.longitude = position.coords.longitude;
-
-
 
     this.initializeMap(this.selectedBasemap);
   }
@@ -46,7 +49,7 @@ export class HomePage implements OnInit {
     this.view = new MapView({
       container: 'container',
       map: this.map,
-      zoom: 8,
+      zoom: 6,
       center: [this.longitude, this.latitude]
     });
     
@@ -81,8 +84,8 @@ export class HomePage implements OnInit {
 
     // Marker at fixed coordinates
     const fixedPoint = new Point({
-      longitude: -79.41245941352786,
-      latitude: 43.701882607460945
+      longitude: this.secondLongitude,
+      latitude: this.secondLatitude
     });
 
     const fixedMarkerSymbol = {
@@ -108,4 +111,19 @@ export class HomePage implements OnInit {
     this.selectedBasemap = basemap;
   }
 
+  // Method to switch location
+  public switchLocation() {
+    if (this.isGeolocation) {
+      this.view.center = [this.secondLongitude, this.secondLatitude];
+    } else {
+      this.view.center = [this.longitude, this.latitude];
+    }
+    this.isGeolocation = !this.isGeolocation;
+  }
+
+  // Method to handle basemap change event
+  public onBasemapChange(event: any) {
+    const selectedBasemap = event.target.value;
+    this.changeBasemap(selectedBasemap);
+  }
 }
